@@ -7,7 +7,12 @@ export const getNoteViewList = (noteList: NoteList): NoteViewList => {
 
   noteListKeyList.forEach((noteListKey) => {
     const note = noteList[noteListKey];
-    noteViewList[noteListKey] = { title: note.title, childIdList: [] };
+    noteViewList[noteListKey] = {
+      title: note.title,
+      isEnableSubList: note.isEnableSubList,
+      childIdList: [],
+      order: note.order,
+    };
   });
 
   noteListKeyList.forEach((noteListKey) => {

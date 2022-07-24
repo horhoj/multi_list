@@ -12,3 +12,21 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.positionButtonList {
+  display: flex;
+  gap: 10px;
+
+  & > button {
+    padding: 3px;
+    cursor: pointer;
+  }
+}
+
+.addSublistButton {
+  padding: 3px;
+  cursor: pointer;
+}
+
+
+
