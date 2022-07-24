@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { getRandomId } from '../../utils/getRandomId';
 import styles from './ListFeature.module.scss';
 import { NoteItem, NoteList } from './types';
@@ -6,10 +6,33 @@ import { defaultNotesList } from './defaultData';
 import { deleteItemFromNodeList, getNoteViewList } from './helpers';
 import { NoteView } from './NoteView';
 
-export const ListFeature: FC = () => {
-  const [noteList, setNoteList] = useState<NoteList>(defaultNotesList);
+const LS_KEY_MAX_ORDER = 'LS_KEY_MAX_ORDER';
+const LS_KEY_NOTE_LIST = 'LS_KEY_NOTE_LIST';
 
-  const [maxOrder, setMaxOrder] = useState<number>(1);
+export const ListFeature: FC = () => {
+  const [noteList, setNoteList] = useState<NoteList>(() => {
+    const noteListStr: string | null = localStorage.getItem(LS_KEY_NOTE_LIST);
+    if (noteListStr === null) {
+      return defaultNotesList;
+    }
+    return JSON.parse(noteListStr);
+  });
+
+  const [maxOrder, setMaxOrder] = useState<number>(() => {
+    const maxOrderStr: string | null = localStorage.getItem(LS_KEY_MAX_ORDER);
+    if (maxOrderStr === null) {
+      return 1;
+    }
+    return JSON.parse(maxOrderStr);
+  });
+
+  useEffect(() => {
+    localStorage.setItem(LS_KEY_MAX_ORDER, JSON.stringify(maxOrder));
+  }, [maxOrder]);
+
+  useEffect(() => {
+    localStorage.setItem(LS_KEY_NOTE_LIST, JSON.stringify(noteList));
+  }, [noteList]);
 
   const noteViewList = getNoteViewList(noteList);
 
