@@ -11,6 +11,9 @@ interface NoteViewProps {
   id: string;
   onAddSublist: (id: string) => void;
   onChangeOrder: (idA: string, idB: string) => void;
+  isEnableDeleteItem: boolean;
+  onDeleteItem: (id: string) => void;
+  onDeleteSublist: (id: string) => void;
 }
 
 const NOTE_EDIT_FORM_INITIAL_STATE: NoteEditFormValues = {
@@ -26,6 +29,9 @@ export const NoteView: FC<NoteViewProps> = ({
   id,
   children,
   onChangeOrder,
+  isEnableDeleteItem,
+  onDeleteItem,
+  onDeleteSublist,
 }) => {
   const [noteEditFormInitialState, setNoteEditFormInitialState] =
     useState<NoteEditFormValues>({ ...NOTE_EDIT_FORM_INITIAL_STATE });
@@ -52,21 +58,35 @@ export const NoteView: FC<NoteViewProps> = ({
   return (
     <div className={styles.wrap}>
       <div>{noteViewItem.title}</div>
-      {children && <div className={styles.positionButtonList}>{children}</div>}
+      {isEnableDeleteItem && (
+        <div className={styles.buttonList}>
+          <button className={styles.button} onClick={() => onDeleteItem(id)}>
+            deleteItem
+          </button>
+          {noteViewItem.isEnableSubList && (
+            <button
+              className={styles.button}
+              onClick={() => onDeleteSublist(id)}
+            >
+              delete sublist
+            </button>
+          )}
+        </div>
+      )}
+      {children && <div className={styles.buttonList}>{children}</div>}
       <div>
         {noteViewItem.isEnableSubList ? (
-          <NoteEditForm
-            initialValues={noteEditFormInitialState}
-            onSubmit={handleFormSubmit}
-            placeholder={'add element'}
-            autoFocus={false}
-            onCancel={handleFormCancel}
-          />
+          <>
+            <NoteEditForm
+              initialValues={noteEditFormInitialState}
+              onSubmit={handleFormSubmit}
+              placeholder={'add element'}
+              autoFocus={false}
+              onCancel={handleFormCancel}
+            />
+          </>
         ) : (
-          <button
-            className={styles.addSublistButton}
-            onClick={() => onAddSublist(id)}
-          >
+          <button className={styles.button} onClick={() => onAddSublist(id)}>
             Add Sublist
           </button>
         )}
@@ -82,9 +102,13 @@ export const NoteView: FC<NoteViewProps> = ({
             id={childId}
             onAddSublist={onAddSublist}
             onChangeOrder={onChangeOrder}
+            isEnableDeleteItem={true}
+            onDeleteItem={onDeleteItem}
+            onDeleteSublist={onDeleteSublist}
           >
             {index > 0 && (
               <button
+                className={styles.button}
                 onClick={() =>
                   onChangeOrder(childListView[index], childListView[index - 1])
                 }
@@ -94,6 +118,7 @@ export const NoteView: FC<NoteViewProps> = ({
             )}
             {index < childListView.length - 1 && (
               <button
+                className={styles.button}
                 onClick={() =>
                   onChangeOrder(childListView[index + 1], childListView[index])
                 }

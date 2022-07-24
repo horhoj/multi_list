@@ -3,7 +3,7 @@ import { getRandomId } from '../../utils/getRandomId';
 import styles from './ListFeature.module.scss';
 import { NoteItem, NoteList } from './types';
 import { defaultNotesList } from './defaultData';
-import { getNoteViewList } from './helpers';
+import { deleteItemFromNodeList, getNoteViewList } from './helpers';
 import { NoteView } from './NoteView';
 
 export const ListFeature: FC = () => {
@@ -46,6 +46,29 @@ export const ListFeature: FC = () => {
     }));
   };
 
+  const handleDeleteItem = (id: string) => {
+    const newNodeList = deleteItemFromNodeList(
+      id,
+      noteList,
+      noteViewList,
+      true,
+    );
+    setNoteList(newNodeList);
+  };
+
+  const handleDeleteSublist = (id: string) => {
+    const newNodeList = deleteItemFromNodeList(
+      id,
+      noteList,
+      noteViewList,
+      false,
+    );
+    setNoteList({
+      ...newNodeList,
+      [id]: { ...noteList[id], isEnableSubList: false },
+    });
+  };
+
   return (
     <div className={styles.wrap}>
       {/*Здесь у нас корневой элемент с индексом 1*/}
@@ -56,6 +79,9 @@ export const ListFeature: FC = () => {
         id={'1'}
         onAddSublist={handleAddSubList}
         onChangeOrder={handleChangeOrder}
+        isEnableDeleteItem={false}
+        onDeleteItem={handleDeleteItem}
+        onDeleteSublist={handleDeleteSublist}
       />
     </div>
   );

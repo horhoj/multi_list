@@ -13,17 +13,13 @@
   gap: 10px;
 }
 
-.positionButtonList {
+.buttonList {
   display: flex;
   gap: 10px;
 
-  & > button {
-    padding: 3px;
-    cursor: pointer;
-  }
 }
 
-.addSublistButton {
+.button {
   padding: 3px;
   cursor: pointer;
 }
